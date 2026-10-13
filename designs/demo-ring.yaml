@@ -1,0 +1,53 @@
+network:
+  name: demo-rde-ring
+  region: kujawsko-pomorskie
+  description: "Regional delivery dry-run lab for interview portfolio"
+
+sites:
+  - id: byd-01
+    role: aggregation
+    location: Bydgoszcz
+    clab_kind: nokia_srlinux
+    image: ghcr.io/nokia/srlinux
+  - id: tor-01
+    role: aggregation
+    location: Torun
+    clab_kind: nokia_srlinux
+    image: ghcr.io/nokia/srlinux
+  - id: host-a
+    role: tester
+    location: Bydgoszcz
+    clab_kind: linux
+    image: alpine:3.20
+
+links:
+  - id: L1
+    a: byd-01
+    z: tor-01
+    a_endpoint: e1-1
+    z_endpoint: e1-1
+    length_km: 85
+    fiber_loss_db_km: 0.22
+    connectors_db: 1.0
+  - id: L2
+    a: tor-01
+    z: host-a
+    a_endpoint: e1-2
+    z_endpoint: eth1
+    length_km: 2
+    fiber_loss_db_km: 0.22
+    connectors_db: 0.5
+
+services:
+  - id: SVC-DEMO-1
+    path: [byd-01, tor-01]
+    wavelength_nm: 1547.72
+    bitrate_gbps: 100
+
+checks:
+  - type: span_loss_max
+    link: L1
+    max_db: 25
+  - type: unique_wavelengths
+  - type: path_exists
+    service: SVC-DEMO-1

@@ -1,0 +1,23 @@
+name: demo-rde-ring
+mgmt:
+  network: clab
+  ipv4-subnet: 172.30.30.0/24
+  ipv6-subnet: 3fff:172:30:30::/64
+topology:
+  nodes:
+    byd-01:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux
+    tor-01:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux
+    host-a:
+      kind: linux
+      image: alpine:3.20
+  links:
+  - endpoints:
+    - byd-01:e1-1
+    - tor-01:e1-1
+  - endpoints:
+    - tor-01:e1-2
+    - host-a:eth1

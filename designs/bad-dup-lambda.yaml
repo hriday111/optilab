@@ -1,0 +1,41 @@
+network:
+  name: bad-dup-lambda
+  region: kujawsko-pomorskie
+  description: "Broken fixture: two services share the same wavelength"
+
+sites:
+  - id: byd-01
+    role: aggregation
+    location: Bydgoszcz
+    clab_kind: nokia_srlinux
+    image: ghcr.io/nokia/srlinux
+  - id: tor-01
+    role: aggregation
+    location: Torun
+    clab_kind: nokia_srlinux
+    image: ghcr.io/nokia/srlinux
+
+links:
+  - id: L1
+    a: byd-01
+    z: tor-01
+    a_endpoint: e1-1
+    z_endpoint: e1-1
+    length_km: 85
+    fiber_loss_db_km: 0.22
+    connectors_db: 1.0
+
+services:
+  - id: SVC-A
+    path: [byd-01, tor-01]
+    wavelength_nm: 1547.72
+    bitrate_gbps: 100
+  - id: SVC-B
+    path: [byd-01, tor-01]
+    wavelength_nm: 1547.72
+    bitrate_gbps: 100
+
+checks:
+  - type: unique_wavelengths
+  - type: path_exists
+    service: SVC-A
